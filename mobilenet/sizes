@@ -1,0 +1,15 @@
+A_dim B_dim C_dim Name
+64 32 12544 contraction_1x1_0.npy
+128 64 3136 contraction_1x1_1.npy
+128 128 3136 contraction_1x1_2.npy
+256 128 784 contraction_1x1_3.npy
+256 256 784 contraction_1x1_4.npy
+512 256 196 contraction_1x1_5.npy
+512 512 196 contraction_1x1_6.npy
+512 512 196 contraction_1x1_7.npy
+512 512 196 contraction_1x1_8.npy
+512 512 196 contraction_1x1_9.npy
+512 512 196 contraction_1x1_10.npy
+1024 512 49 contraction_1x1_11.npy
+1024 1024 49 contraction_1x1_12.npy
+
