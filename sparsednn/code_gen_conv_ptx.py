@@ -371,7 +371,7 @@ def gencode(BA,outfile,C_dim,A_blocks,C_blocks,GY,name=None):
     temp_ptx_file_name = "temp_stub" + token + ".ptx"
 
     open(temp_cu_file_name,"w").write(program)
-    os.system("nvcc -arch=sm_75 -I /home/ubuntu/cnpy -L /home/ubuntu/cnpy/build -w -O3 -ptx -o " + temp_ptx_file_name + " " + temp_cu_file_name + " --std=c++11 --compiler-options=\"-fsingle-precision-constant\" -lcnpy -lz")
+    os.system("nvcc -arch=sm_75 -I build/include -L build/lib -w -O3 -ptx -o " + temp_ptx_file_name + " " + temp_cu_file_name + " --std=c++11 --compiler-options=\"-fsingle-precision-constant\" -lcnpy -lz")
     os.sync()
     reg_names , addresses = parse_ptx(temp_ptx_file_name,A_blocks)
     #print(reg_names)

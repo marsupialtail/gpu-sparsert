@@ -83,7 +83,7 @@ for A_blocks in $(($A_dim / 8)); do
 			#./test > runtime
 			python sparsednn/code_gen_ptx.py --A_dim $A_dim --B_dim $B_dim --C_dim $C_dim --A_blocks $A_blocks --C_blocks $C_blocks --Gy $Gy --infile $infile --outfile testing.ptx
 			ptxas -arch=sm_75 testing.ptx -o testing.cubin
-                        nvcc sparsednn/driver_spmm.cpp -w -O3 -DA_dim=$A_dim,B_dim=$B_dim,C_dim=$C_dim,A_Blocks=$A_blocks,C_Blocks=$C_blocks,Gy=$Gy,infile=$infile_str -lcuda -lcudart -lcnpy -o exe --std=c++11 -Xptxas="-v" -I ../cnpy -L ../cnpy/build
+                        nvcc sparsednn/driver_spmm.cpp -w -O3 -DA_dim=$A_dim,B_dim=$B_dim,C_dim=$C_dim,A_Blocks=$A_blocks,C_Blocks=$C_blocks,Gy=$Gy,infile=$infile_str -lcuda -lcudart -lcnpy -o exe --std=c++11 -Xptxas="-v" -I build/include -L build/lib
 			./exe > runtime
 			cat runtime
 			python scripts/test_equivalence.py ref.npy ptx_result.npy
