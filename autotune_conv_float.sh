@@ -42,8 +42,19 @@ for A in ${A_choices[@]}; do
 		python3 sparsednn/code_gen_conv_ptx.py --Gy=$Gy --IC=$IC --OC=$OC --IMAGE_DIM=$IMAGE_DIM --infile transposed_filter.npy --outfile $ptx_name --A_blocks=$A --C_blocks=$C 
 		ptxas -arch=sm_75 $ptx_name -o ${kernel_name}
 		cp ${kernel_name} testing_conv.cubin
-		nvcc -I /home/ubuntu/cnpy -L /home/ubuntu/cnpy/build  -O3 -arch=sm_75 sparsednn/driver_conv.cu -lcudnn -lcnpy -lcuda -DRESIDUAL=$RESIDUAL,HALF=0,A_Blocks=$A,C_Blocks=$C,Gy=$Gy,IC=$IC,OC=$OC,IMAGE_DIM=${IMAGE_DIM} -o ./exe
-		LD_LIBRARY_PATH=../cnpy/build ./exe
+
+		ADDITIONAL_INCLUDES=""
+
+		if ! [ -z ${CUDNN_INCDIR+x} ];
+		then ADDITIONAL_INCLUDES="${ADDITIONAL_INCLUDES} -I ${CUDNN_INCDIR}";
+		fi
+
+		if ! [ -z ${CUDNN_LIBDIR+x} ];
+		then ADDITIONAL_INCLUDES="${ADDITIONAL_INCLUDES} -L ${CUDNN_LIBDIR}";
+		fi
+
+		nvcc -std=c++11 -I build/include -L build/lib -O3 -arch=sm_75 sparsednn/driver_conv.cu -lcudnn -lcnpy -lcuda -DRESIDUAL=$RESIDUAL,HALF=0,A_Blocks=$A,C_Blocks=$C,Gy=$Gy,IC=$IC,OC=$OC,IMAGE_DIM=${IMAGE_DIM} -o ./exe ${ADDITIONAL_INCLUDES}
+		LD_LIBRARY_PATH=$LD_LIBRARY_PATH:build/lib ./exe
 		python3 scripts/test_equivalence.py kernel_output.npy cudnn_output.npy
 	done
 done
